@@ -2,8 +2,8 @@ import Link from "next/link";
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 
-// Drop real project photos into /public/gallery (e.g. project-1.jpg ... project-6.jpg)
-// and they'll automatically replace the branded tiles below.
+// Drop real project photos into /public/gallery (project-1.jpg ... project-6.jpg).
+// They paint over the branded tile automatically; if a file is missing the tile shows.
 const tiles = [
   { label: "Landscape Design & Installation", icon: "🏡", file: "/gallery/project-1.jpg" },
   { label: "Lawn Maintenance", icon: "🌿", file: "/gallery/project-2.jpg" },
@@ -30,15 +30,12 @@ export default function GalleryPage() {
           {tiles.map((t, i) => (
             <div
               key={i}
-              className="group relative flex aspect-[4/3] flex-col items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-prime-700 to-prime-950 text-center text-white"
+              className="relative flex aspect-[4/3] flex-col items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-prime-700 to-prime-950 text-center text-white"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={t.file}
-                alt={t.label}
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover"
-                onError={(e) => ((e.currentTarget.style.display = "none"))}
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url('${t.file}')` }}
+                aria-hidden
               />
               <div className="relative z-0 px-4">
                 <div className="text-4xl">{t.icon}</div>
