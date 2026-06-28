@@ -48,11 +48,11 @@ export default function Home() {
                 <p className="label">Instant Quote Preview</p>
                 <p className="mt-1 text-sm text-prime-700">3934 Bryce Ave, Fort Worth</p>
                 <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-                  {[["Weekly","$45"],["Bi-Weekly","$50"],["Monthly","$60"]].map(([k,v]) => (
+                  {[["Weekly","$194"],["Bi-Weekly","$108"],["Monthly","$60"]].map(([k,v]) => (
                     <div key={k} className="rounded-xl border border-prime-100 p-3">
                       <div className="text-xs text-prime-600">{k}</div>
                       <div className="text-xl font-bold text-prime-700">{v}</div>
-                      <div className="text-[10px] text-prime-500">per visit</div>
+                      <div className="text-[10px] text-prime-500">per month</div>
                     </div>
                   ))}
                 </div>
