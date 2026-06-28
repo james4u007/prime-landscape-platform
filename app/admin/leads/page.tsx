@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import ConvertLead from "@/components/ConvertLead";
 
 export const dynamic = "force-dynamic";
 const money = (n: number | null) => (n ? `$${Number(n).toLocaleString()}` : "—");
@@ -22,7 +23,7 @@ export default async function LeadsPage() {
             <tr>
               <th className="px-4 py-3">Date</th><th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Contact</th><th className="px-4 py-3">Address</th>
-              <th className="px-4 py-3">Quoted (wk)</th><th className="px-4 py-3">Source</th><th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">Quoted (wk)</th><th className="px-4 py-3">Source</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-prime-50">
@@ -35,9 +36,10 @@ export default async function LeadsPage() {
                 <td className="px-4 py-3 text-prime-700">{money(l.quoted_weekly)}</td>
                 <td className="px-4 py-3 text-prime-600">{(l.source || "").replace("_", " ")}</td>
                 <td className="px-4 py-3"><span className="rounded-full bg-prime-100 px-2 py-0.5 text-xs font-semibold text-prime-700">{l.status}</span></td>
+                <td className="px-4 py-3">{l.status !== "won" && <ConvertLead lead={l} />}</td>
               </tr>
             ))}
-            {!leads?.length && <tr><td colSpan={7} className="px-4 py-10 text-center text-prime-500">No leads yet.</td></tr>}
+            {!leads?.length && <tr><td colSpan={8} className="px-4 py-10 text-center text-prime-500">No leads yet.</td></tr>}
           </tbody>
         </table>
       </div>
