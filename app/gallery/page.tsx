@@ -1,9 +1,15 @@
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 
-// NOTE: Swap these for Prime's real gallery photos. Drop images into /public/gallery
-// and list their filenames here, or we can import them straight from the existing site.
-const photos = Array.from({ length: 9 }).map((_, i) => `/gallery/photo-${i + 1}.jpg`);
+// Real Prime Landscape photos pulled from the existing website.
+const photos = [
+  "https://nebula.wsimg.com/7dfdbca07cf8f9e9882a167b6cd324dd",
+  "https://nebula.wsimg.com/63140a2c7a778bbfd73e41ad42065304",
+  "https://nebula.wsimg.com/72b15aed368f9aec8d07e258f6ee3a64",
+  "https://nebula.wsimg.com/2fedec1f469c6f8741749bdd16c925c6",
+  "https://nebula.wsimg.com/f0da52251d48c1a20617ee6be8fc0aef",
+  "https://nebula.wsimg.com/498555f9e2dc1b17b975dd31633d6553",
+];
 
 export default function GalleryPage() {
   return (
@@ -18,23 +24,21 @@ export default function GalleryPage() {
         </div>
       </section>
       <section className="container-x py-14">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {photos.map((src, i) => (
             <div key={i} className="group relative aspect-[4/3] overflow-hidden rounded-2xl bg-prime-100">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={src}
-                alt={`Project ${i + 1}`}
-                className="h-full w-full object-cover transition group-hover:scale-105"
+                alt={`Prime Landscape project ${i + 1}`}
+                loading="lazy"
+                className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
               />
-              <div className="pointer-events-none absolute inset-0 grid place-items-center text-prime-400">
-                <span className="text-sm">Photo {i + 1}</span>
-              </div>
             </div>
           ))}
         </div>
         <p className="mt-8 text-center text-sm text-prime-500">
-          Add your real project photos to <code>/public/gallery</code> to populate this page.
+          Want more shots featured? We can add as many project photos as you like.
         </p>
       </section>
       <SiteFooter />
