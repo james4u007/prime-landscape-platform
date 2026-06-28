@@ -118,8 +118,8 @@ export default function BidPage() {
               {(["weekly","biweekly","monthly"] as const).map((f) => (
                 <div key={f} className="rounded-2xl border border-prime-100 p-4 text-center">
                   <div className="text-xs capitalize text-prime-600">{f === "biweekly" ? "bi-weekly" : f}</div>
-                  <div className="mt-1 text-2xl font-extrabold text-prime-700">{money(quote.mowing[f].pricePerVisit)}</div>
-                  <div className="text-[11px] text-prime-500">/visit · ~{money(quote.mowing[f].estMonthly)}/mo</div>
+                  <div className="mt-1 text-2xl font-extrabold text-prime-700">{money(quote.mowing[f].estMonthly)}</div>
+                  <div className="text-[11px] text-prime-500">/mo · {money(quote.mowing[f].pricePerVisit)}/cut</div>
                 </div>
               ))}
             </div>

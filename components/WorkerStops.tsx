@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { aerialUrl } from "@/lib/google";
+import { mapsRouteUrl } from "@/lib/route";
 
 type Stop = {
   id: string;
@@ -28,6 +29,14 @@ export default function WorkerStops({ initial }: { initial: Stop[] }) {
 
   return (
     <div className="space-y-4">
+      <a
+        href={mapsRouteUrl(stops.map((s) => ({ lat: s.pls_properties?.latitude, lng: s.pls_properties?.longitude, address: `${s.pls_properties?.address || ""}, ${s.pls_properties?.city || ""}` })))}
+        target="_blank"
+        rel="noreferrer"
+        className="btn-primary w-full"
+      >
+        🧭 Navigate full route ({stops.length} stops)
+      </a>
       {stops.map((s) => {
         const pr = s.pls_properties;
         const addr = pr ? `${pr.address}, ${pr.city || ""}, TX ${pr.zip || ""}` : "";

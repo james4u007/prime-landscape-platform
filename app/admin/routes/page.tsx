@@ -1,49 +1,37 @@
 import { createClient } from "@/lib/supabase/server";
+import RoutesManager from "@/components/RoutesManager";
 
 export const dynamic = "force-dynamic";
 
 export default async function RoutesPage() {
   const supabase = createClient();
-  const { data: routes } = await supabase
+
+  const { data: routesRaw } = await supabase
     .from("pls_routes")
-    .select("*, pls_profiles(full_name), pls_route_stops(id, sequence, service_type, status, pls_properties(address, city))")
+    .select("id, name, route_date, worker_id, pls_profiles(full_name), pls_route_stops(id, sequence, service_type, status, pls_properties(id, address, city, zip, latitude, longitude))")
     .order("route_date", { ascending: false })
-    .limit(30);
+    .limit(40);
 
-  return (
-    <div>
-      <h1 className="text-2xl font-extrabold text-prime-900">Routes</h1>
-      <p className="mt-1 text-prime-700">Daily crew routes. Workers see only their own assigned route — never billing.</p>
+  const { data: workers } = await supabase
+    .from("pls_profiles").select("id, full_name").eq("role", "worker").eq("active", true).order("full_name");
 
-      <div className="mt-6 space-y-5">
-        {(routes || []).map((r: any) => {
-          const stops = (r.pls_route_stops || []).sort((a: any, b: any) => a.sequence - b.sequence);
-          const done = stops.filter((s: any) => s.status === "done").length;
-          return (
-            <div key={r.id} className="card p-5">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div>
-                  <h3 className="font-bold text-prime-900">{r.name || "Route"} · {r.route_date}</h3>
-                  <p className="text-sm text-prime-700">Crew: {r.pls_profiles?.full_name || "Unassigned"}</p>
-                </div>
-                <span className="rounded-full bg-prime-100 px-3 py-1 text-xs font-semibold text-prime-700">
-                  {done}/{stops.length} done
-                </span>
-              </div>
-              <ol className="mt-3 divide-y divide-prime-50 text-sm">
-                {stops.map((s: any) => (
-                  <li key={s.id} className="flex items-center justify-between py-2">
-                    <span className="text-prime-800">{s.sequence}. {s.pls_properties?.address}, {s.pls_properties?.city}</span>
-                    <span className="text-prime-600 capitalize">{s.service_type} · {s.status}</span>
-                  </li>
-                ))}
-                {!stops.length && <li className="py-3 text-prime-500">No stops on this route.</li>}
-              </ol>
-            </div>
-          );
-        })}
-        {!routes?.length && <div className="card p-10 text-center text-prime-500">No routes yet.</div>}
-      </div>
-    </div>
-  );
+  const { data: propsRaw } = await supabase
+    .from("pls_properties")
+    .select("id, address, city, zip, latitude, longitude, pls_service_plans(frequency, active, service_type)");
+
+  const routes = (routesRaw || []).map((r: any) => ({
+    id: r.id, name: r.name, route_date: r.route_date, worker_id: r.worker_id,
+    worker: r.pls_profiles?.full_name || null,
+    stops: (r.pls_route_stops || []).map((s: any) => ({
+      id: s.id, sequence: s.sequence, service_type: s.service_type, status: s.status,
+      property: s.pls_properties,
+    })).filter((s: any) => s.property),
+  }));
+
+  const properties = (propsRaw || []).map((p: any) => ({
+    id: p.id, address: p.address, city: p.city, zip: p.zip, latitude: p.latitude, longitude: p.longitude,
+    plans: p.pls_service_plans || [],
+  }));
+
+  return <RoutesManager initialRoutes={routes as any} workers={(workers as any) || []} properties={properties as any} />;
 }
