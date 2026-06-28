@@ -1,5 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import ChargeButton from "@/components/ChargeButton";
 
 export const dynamic = "force-dynamic";
 const money = (n: number) => `$${Number(n || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -47,7 +48,7 @@ export default async function BillingPage() {
   const supabase = createClient();
   const { data: invoices } = await supabase
     .from("pls_invoices")
-    .select("*, pls_customers(name)")
+    .select("*, pls_customers(name, stripe_customer_id, default_payment_method)")
     .order("created_at", { ascending: false })
     .limit(100);
 
@@ -76,7 +77,7 @@ export default async function BillingPage() {
       <div className="card mt-6 overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-prime-50 text-left text-prime-700">
-            <tr><th className="px-4 py-3">Customer</th><th className="px-4 py-3">Period</th><th className="px-4 py-3">Amount</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">QB</th></tr>
+            <tr><th className="px-4 py-3">Customer</th><th className="px-4 py-3">Period</th><th className="px-4 py-3">Amount</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">QB</th><th className="px-4 py-3">Action</th></tr>
           </thead>
           <tbody className="divide-y divide-prime-50">
             {list.map((i: any) => (
@@ -86,9 +87,10 @@ export default async function BillingPage() {
                 <td className="px-4 py-3 font-semibold text-prime-800">{money(i.amount)}</td>
                 <td className="px-4 py-3 capitalize text-prime-700">{i.status}</td>
                 <td className="px-4 py-3 text-prime-600">{i.qb_exported ? "✓" : "—"}</td>
+                <td className="px-4 py-3">{i.status !== "paid" && <ChargeButton invoiceId={i.id} hasCard={!!(i.pls_customers?.stripe_customer_id && i.pls_customers?.default_payment_method)} />}</td>
               </tr>
             ))}
-            {!list.length && <tr><td colSpan={5} className="px-4 py-10 text-center text-prime-500">No invoices yet. Generate this month&apos;s to begin.</td></tr>}
+            {!list.length && <tr><td colSpan={6} className="px-4 py-10 text-center text-prime-500">No invoices yet. Generate this month&apos;s to begin.</td></tr>}
           </tbody>
         </table>
       </div>

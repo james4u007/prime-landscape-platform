@@ -24,6 +24,7 @@ export default function SiteNav() {
               {l.label}
             </Link>
           ))}
+          <a href="tel:+18172658000" className="hidden text-sm font-semibold text-prime-700 lg:inline">📞 (817) 265-8000</a>
           <Link href="/quote" className="btn-primary">Get My Price</Link>
         </nav>
         <button className="md:hidden" onClick={() => setOpen(!open)} aria-label="Menu">
