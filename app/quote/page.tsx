@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 import { createClient } from "@/lib/supabase/client";
@@ -12,6 +13,7 @@ const money = (n: number) => `$${Math.round(n).toLocaleString("en-US")}`;
 
 export default function QuotePage() {
   const supabase = createClient();
+  const router = useRouter();
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);
   const [matches, setMatches] = useState<Parcel[]>([]);
@@ -52,6 +54,15 @@ export default function QuotePage() {
   }
 
   function pick(p: Parcel) { setQuote(build(p, config)); setShowAlternates(false); }
+
+  function startBooking() {
+    if (!quote) return;
+    sessionStorage.setItem("pls_booking", JSON.stringify({
+      parcel: { ...quote.parcel, aerialUrl: quote.photo.aerialUrl },
+      acres: quote.acres, turfSqftEst: quote.turfSqftEst, freq, mowing: quote.mowing,
+    }));
+    router.push("/book");
+  }
 
   async function submitLead(e: React.FormEvent, source: string) {
     e.preventDefault();
@@ -167,7 +178,7 @@ export default function QuotePage() {
                     })}
                   </div>
                   <p className="mt-3 text-xs text-prime-500">Peak-season estimate. Winter months bill less as growth slows.</p>
-                  <button className="btn-primary mt-5 w-full" onClick={() => setLeadOpen(true)}>Start Service</button>
+                  <button className="btn-primary mt-5 w-full" onClick={startBooking}>Start Service →</button>
                 </>
               )}
             </div>

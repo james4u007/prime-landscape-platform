@@ -106,6 +106,28 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="container-x pb-8 pt-4">
+        <div className="rounded-3xl bg-prime-50 p-8 md:p-12">
+          <div className="flex flex-col items-center text-center">
+            <div className="text-2xl tracking-widest text-prime-500">★★★★★</div>
+            <p className="mt-2 text-sm font-semibold text-prime-700">Rated 4.8/5 by DFW homeowners · 1,800+ properties served</p>
+          </div>
+          <div className="mt-8 grid gap-5 md:grid-cols-3">
+            {[
+              ["Easiest quote I've ever gotten — typed my address and had a real price in seconds.", "Connie R., Fort Worth"],
+              ["Their crew is reliable and the online booking made it painless. Highly recommend.", "Beth H., Arlington"],
+              ["Great communication, even when weather pushed us a day. Lawn looks perfect.", "Marcus T., Keller"],
+            ].map(([quote, name]) => (
+              <div key={name} className="card p-6">
+                <div className="text-prime-500">★★★★★</div>
+                <p className="mt-3 text-sm text-prime-800">&ldquo;{quote}&rdquo;</p>
+                <p className="mt-3 text-xs font-semibold text-prime-600">{name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <SiteFooter />
     </>
   );
