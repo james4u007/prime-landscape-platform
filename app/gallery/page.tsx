@@ -1,14 +1,16 @@
+import Link from "next/link";
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 
-// Real Prime Landscape photos pulled from the existing website.
-const photos = [
-  "https://nebula.wsimg.com/7dfdbca07cf8f9e9882a167b6cd324dd",
-  "https://nebula.wsimg.com/63140a2c7a778bbfd73e41ad42065304",
-  "https://nebula.wsimg.com/72b15aed368f9aec8d07e258f6ee3a64",
-  "https://nebula.wsimg.com/2fedec1f469c6f8741749bdd16c925c6",
-  "https://nebula.wsimg.com/f0da52251d48c1a20617ee6be8fc0aef",
-  "https://nebula.wsimg.com/498555f9e2dc1b17b975dd31633d6553",
+// Drop real project photos into /public/gallery (e.g. project-1.jpg ... project-6.jpg)
+// and they'll automatically replace the branded tiles below.
+const tiles = [
+  { label: "Landscape Design & Installation", icon: "🏡", file: "/gallery/project-1.jpg" },
+  { label: "Lawn Maintenance", icon: "🌿", file: "/gallery/project-2.jpg" },
+  { label: "Irrigation & Sprinklers", icon: "💧", file: "/gallery/project-3.jpg" },
+  { label: "Retaining Walls & Hardscapes", icon: "🧱", file: "/gallery/project-4.jpg" },
+  { label: "Water Features", icon: "⛲", file: "/gallery/project-5.jpg" },
+  { label: "Commercial Grounds", icon: "🏢", file: "/gallery/project-6.jpg" },
 ];
 
 export default function GalleryPage() {
@@ -25,21 +27,32 @@ export default function GalleryPage() {
       </section>
       <section className="container-x py-14">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {photos.map((src, i) => (
-            <div key={i} className="group relative aspect-[4/3] overflow-hidden rounded-2xl bg-prime-100">
+          {tiles.map((t, i) => (
+            <div
+              key={i}
+              className="group relative flex aspect-[4/3] flex-col items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-prime-700 to-prime-950 text-center text-white"
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={src}
-                alt={`Prime Landscape project ${i + 1}`}
+                src={t.file}
+                alt={t.label}
                 loading="lazy"
-                className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                className="absolute inset-0 h-full w-full object-cover"
+                onError={(e) => ((e.currentTarget.style.display = "none"))}
               />
+              <div className="relative z-0 px-4">
+                <div className="text-4xl">{t.icon}</div>
+                <div className="mt-3 text-sm font-semibold text-prime-100">{t.label}</div>
+              </div>
             </div>
           ))}
         </div>
         <p className="mt-8 text-center text-sm text-prime-500">
-          Want more shots featured? We can add as many project photos as you like.
+          Send us your favorite project photos and we&apos;ll feature them here.
         </p>
+        <div className="mt-4 text-center">
+          <Link href="/quote" className="btn-primary">Get an Instant Quote</Link>
+        </div>
       </section>
       <SiteFooter />
     </>
