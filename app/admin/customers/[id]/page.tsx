@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import PropertyPhotos from "@/components/PropertyPhotos";
+import CopyLink from "@/components/CopyLink";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,12 @@ export default async function CustomerDetail({ params }: { params: { id: string 
       <p className="mt-1 text-sm text-prime-700">
         {customer.email || "no email"} · {customer.phone || "no phone"}
       </p>
+
+      <div className="card mt-4 max-w-xl p-4">
+        <p className="label">Customer portal link</p>
+        <p className="mb-2 text-xs text-prime-600">Private link for this customer to view services, photos &amp; invoices.</p>
+        <CopyLink url={`https://prime-landscape-platform.vercel.app/portal/${customer.portal_token}`} />
+      </div>
 
       <h2 className="mt-8 text-lg font-bold text-prime-900">Properties</h2>
       <div className="mt-4 grid gap-6 lg:grid-cols-2">

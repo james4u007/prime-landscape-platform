@@ -14,6 +14,19 @@ export default function RoutesManager({ initialRoutes, workers, properties }: { 
   const [routes, setRoutes] = useState<Route[]>(initialRoutes);
   const [busy, setBusy] = useState<string>("");
   const [workerId, setWorkerId] = useState<string>(workers[0]?.id || "");
+  const [drag, setDrag] = useState<{ routeId: string; index: number } | null>(null);
+
+  async function moveStop(route: Route, from: number, to: number) {
+    if (from === to) return;
+    const stops = [...route.stops].sort((a, b) => a.sequence - b.sequence);
+    const [m] = stops.splice(from, 1);
+    stops.splice(to, 0, m);
+    const reseq = stops.map((s, i) => ({ ...s, sequence: i + 1 }));
+    setRoutes((rs) => rs.map((r) => (r.id === route.id ? { ...r, stops: reseq } : r)));
+    for (let i = 0; i < reseq.length; i++) {
+      await supabase.from("pls_route_stops").update({ sequence: i + 1 }).eq("id", reseq[i].id);
+    }
+  }
 
   async function ensureCoords(p: Prop): Promise<{ lat: number; lng: number } | null> {
     if (p.latitude && p.longitude) return { lat: p.latitude, lng: p.longitude };
@@ -121,10 +134,15 @@ export default function RoutesManager({ initialRoutes, workers, properties }: { 
                   </button>
                 </div>
               </div>
-              <ol className="mt-3 divide-y divide-prime-50 text-sm">
-                {stops.map((s) => (
-                  <li key={s.id} className="flex items-center justify-between py-2">
-                    <span className="text-prime-800">{s.sequence}. {s.property.address}, {s.property.city}</span>
+              <p className="mt-3 text-xs text-prime-500">Drag stops to reorder, or hit Optimize.</p>
+              <ol className="mt-1 divide-y divide-prime-50 text-sm">
+                {stops.map((s, idx) => (
+                  <li key={s.id} draggable
+                    onDragStart={() => setDrag({ routeId: r.id, index: idx })}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={() => { if (drag && drag.routeId === r.id) moveStop(r, drag.index, idx); setDrag(null); }}
+                    className="flex cursor-move items-center justify-between py-2 hover:bg-prime-50">
+                    <span className="text-prime-800"><span className="mr-1 text-prime-400">⠿</span>{s.sequence}. {s.property.address}, {s.property.city}</span>
                     <span className="capitalize text-prime-600">{s.service_type} · {s.status}</span>
                   </li>
                 ))}
