@@ -42,13 +42,15 @@ function mowBasePrice(acres: number, cfg: PricingConfig): number {
   return top.price + (acres - top.max_acres) * cfg.mowing.per_acre_over_2;
 }
 
-// Rough turf area: lot minus house footprint & driveway. Used to scale per-app services.
-export function estimateTurfSqft(parcel: Parcel, cfg: PricingConfig): number {
+// Real turf estimate: lot minus the building's ground-floor footprint.
+// Footprint = living area / number of stories (a 2-story home covers half its living area).
+// Returns null when we lack the data to compute it honestly (then the UI shows "Lot size").
+export function estimateTurfSqft(parcel: Parcel, _cfg: PricingConfig): number | null {
   const lot = parcel.land_sqft || (parcel.land_acres ? parcel.land_acres * 43560 : 0);
-  const house = parcel.living_area || 0;
-  const footprint = house * cfg.turf_estimation.house_footprint_factor;
-  const driveway = lot * cfg.turf_estimation.driveway_factor;
-  return Math.max(0, Math.round(lot - footprint - driveway));
+  if (!lot || !parcel.living_area) return null;
+  const stories = parcel.number_of_stories && parcel.number_of_stories > 0 ? parcel.number_of_stories : 1;
+  const footprint = parcel.living_area / stories;
+  return Math.max(0, Math.round(lot - footprint));
 }
 
 export function round5(n: number): number {
@@ -61,7 +63,9 @@ export function computeQuote(
   photo: { aerialUrl: string; streetUrl: string }
 ): QuoteResult {
   const acres = parcel.land_acres || (parcel.land_sqft ? parcel.land_sqft / 43560 : 0.2);
+  const lot = parcel.land_sqft || acres * 43560;
   const turf = estimateTurfSqft(parcel, cfg);
+  const turfForScale = turf ?? Math.round(lot * 0.7);
   const base = mowBasePrice(acres, cfg);
   const isCommercial =
     (parcel.property_class || "").toUpperCase().startsWith("F") ||
@@ -75,7 +79,7 @@ export function computeQuote(
   };
 
   // turf scaling factor relative to a ~6,500 sqft baseline turf
-  const turfFactor = Math.max(0.6, Math.min(3, turf / 6500));
+  const turfFactor = Math.max(0.6, Math.min(3, turfForScale / 6500));
   const addOns = Object.entries(cfg.services).map(([key, s]) => {
     if (s.bid || s.base === 0) {
       return { key, label: s.label, price: null, bid: true };

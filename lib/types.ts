@@ -15,6 +15,7 @@ export type Parcel = {
   living_area: number | null;
   year_built: number | null;
   owner_name: string | null;
+  number_of_stories: number | null;
   score: number | null;
 };
 
@@ -27,7 +28,7 @@ export type FrequencyPrice = {
 export type QuoteResult = {
   parcel: Parcel;
   acres: number;
-  turfSqftEst: number;
+  turfSqftEst: number | null;
   isCommercialBid: boolean;
   mowing: {
     weekly: FrequencyPrice;

@@ -104,7 +104,7 @@ export default function BidPage() {
                 <Field label="Year built" value={p.year_built ? String(p.year_built) : "—"} />
                 <Field label="Owner" value={p.owner_name || "—"} />
                 <Field label="Class" value={`${p.property_class || "—"}`} />
-                <Field label="Est. turf" value={`${quote.turfSqftEst.toLocaleString()} sf`} />
+                <Field label="Est. turf" value={quote.turfSqftEst != null ? `${quote.turfSqftEst.toLocaleString()} sf` : "—"} />
               </div>
             </div>
           </div>

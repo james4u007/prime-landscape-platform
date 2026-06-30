@@ -28,7 +28,9 @@ export default function AddProperty({ customerId }: { customerId: string }) {
   async function add() {
     if (!match) return;
     setBusy(true);
-    const turf = Math.round((match.land_sqft || (match.land_acres || 0) * 43560) * 0.7);
+    const lot = match.land_sqft || (match.land_acres || 0) * 43560;
+    const stories = match.number_of_stories && match.number_of_stories > 0 ? match.number_of_stories : 1;
+    const turf = match.living_area ? Math.max(0, Math.round(lot - match.living_area / stories)) : null;
     await supabase.from("pls_properties").insert({
       customer_id: customerId, account_num: match.account_num,
       address: match.situs_address, city: match.situs_city, zip: match.situs_zip,
