@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import PropertyPhotos from "@/components/PropertyPhotos";
 import CopyLink from "@/components/CopyLink";
+import AddProperty from "@/components/AddProperty";
+import AddPlan from "@/components/AddPlan";
 
 export const dynamic = "force-dynamic";
 
@@ -79,6 +81,7 @@ export default async function CustomerDetail({ params }: { params: { id: string 
                       <li className="text-prime-500">No active plans</li>
                     )}
                   </ul>
+                  <AddPlan propertyId={p.id} lotAcres={p.lot_acres} />
                 </div>
               </div>
             </div>
@@ -88,6 +91,7 @@ export default async function CustomerDetail({ params }: { params: { id: string 
           <div className="card p-8 text-center text-prime-500">No properties on file for this customer.</div>
         )}
       </div>
+      <div className="mt-4"><AddProperty customerId={params.id} /></div>
 
       <h2 className="mt-10 text-lg font-bold text-prime-900">Recent invoices</h2>
       <div className="card mt-4 overflow-hidden">

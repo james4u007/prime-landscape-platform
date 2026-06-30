@@ -14,7 +14,10 @@ export default async function CustomersPage() {
     <div>
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-extrabold text-prime-900">Customers</h1>
-        <span className="text-sm text-prime-600">{customers?.length || 0} total</span>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-prime-600">{customers?.length || 0} total</span>
+          <Link href="/admin/customers/new" className="btn-primary !py-2">+ New customer</Link>
+        </div>
       </div>
 
       <div className="card mt-5 overflow-hidden">
