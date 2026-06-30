@@ -120,7 +120,9 @@ export default function QuotePage() {
                   <p className="text-prime-700">{quote.parcel.situs_city}, TX {quote.parcel.situs_zip}</p>
                   <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
                     <Stat label="Lot size" value={`${quote.acres.toFixed(2)} ac`} />
-                    <Stat label="Turf area" value={`${quote.turfSqftEst.toLocaleString()} sf`} />
+                    {quote.turfSqftEst != null
+                      ? <Stat label="Est. turf area" value={`${quote.turfSqftEst.toLocaleString()} sf`} />
+                      : <Stat label="Lot size" value={`${Math.round(quote.acres * 43560).toLocaleString()} sf`} />}
                     <Stat label="Records" value="Tarrant CAD" />
                   </div>
                 </div>

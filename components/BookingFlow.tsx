@@ -12,7 +12,7 @@ const freqLabel = (f: string) => (f === "biweekly" ? "Bi-Weekly" : f.charAt(0).t
 type Booking = {
   parcel: any;
   acres: number;
-  turfSqftEst: number;
+  turfSqftEst: number | null;
   freq: "weekly" | "biweekly" | "monthly";
   mowing: any;
 };
@@ -65,7 +65,7 @@ export default function BookingFlow() {
           account_num: p.account_num, address: p.situs_address, city: p.situs_city, zip: p.situs_zip,
           lat: p.latitude ? String(p.latitude) : "", lng: p.longitude ? String(p.longitude) : "",
           lot_acres: String(booking!.acres), lot_sqft: p.land_sqft ? String(p.land_sqft) : "",
-          turf_sqft: String(booking!.turfSqftEst), total_value: p.total_value ? String(p.total_value) : "",
+          turf_sqft: booking!.turfSqftEst != null ? String(booking!.turfSqftEst) : "", total_value: p.total_value ? String(p.total_value) : "",
           service_type: "mowing", frequency: booking!.freq, price_per_visit: String(plan!.pricePerVisit),
           start_date: form.start,
         },
