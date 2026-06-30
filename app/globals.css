@@ -14,25 +14,26 @@ body {
   @apply bg-white text-prime-950 antialiased;
 }
 
-.container-x {
-  @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
-}
-
-.btn {
-  @apply inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-prime-400;
-}
-.btn-primary {
-  @apply btn bg-prime-600 text-white hover:bg-prime-700 shadow-sm;
-}
-.btn-ghost {
-  @apply btn border border-prime-200 text-prime-800 hover:bg-prime-50;
-}
-.card {
-  @apply rounded-2xl border border-prime-100 bg-white shadow-sm;
-}
-.label {
-  @apply block text-xs font-semibold uppercase tracking-wide text-prime-600;
-}
-.input {
-  @apply w-full rounded-xl border border-prime-200 bg-white px-4 py-3 text-prime-950 outline-none focus:border-prime-400 focus:ring-2 focus:ring-prime-100;
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-prime-400;
+  }
+  .btn-primary {
+    @apply btn bg-prime-600 text-white hover:bg-prime-700 shadow-sm;
+  }
+  .btn-ghost {
+    @apply btn border border-prime-200 text-prime-800 hover:bg-prime-50;
+  }
+  .card {
+    @apply rounded-2xl border border-prime-100 bg-white shadow-sm;
+  }
+  .label {
+    @apply block text-xs font-semibold uppercase tracking-wide text-prime-600;
+  }
+  .input {
+    @apply w-full rounded-xl border border-prime-200 bg-white px-4 py-3 text-prime-950 outline-none focus:border-prime-400 focus:ring-2 focus:ring-prime-100;
+  }
 }
