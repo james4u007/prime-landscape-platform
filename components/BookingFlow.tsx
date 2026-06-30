@@ -84,7 +84,7 @@ export default function BookingFlow() {
         setStripePromise(loadStripe(j.publishableKey));
         setStep("payment");
       } else {
-        setStep("pending");
+        setStep("pending"); // booked; billing to be set up manually
       }
     } catch (err: any) {
       setError(err.message || "Something went wrong. Please try again.");
@@ -95,6 +95,7 @@ export default function BookingFlow() {
 
   return (
     <div className="grid gap-8 lg:grid-cols-2">
+      {/* Summary */}
       <div className="card overflow-hidden">
         {p.aerialUrl && <img src={p.aerialUrl} alt="Aerial" className="h-56 w-full object-cover" />}
         <div className="p-6">
@@ -103,7 +104,7 @@ export default function BookingFlow() {
           <div className="mt-4 flex items-center justify-between rounded-xl bg-prime-50 p-4">
             <div>
               <div className="font-semibold text-prime-900">{freqLabel(booking.freq)} mowing</div>
-              <div className="text-xs text-prime-600">{plan.visitsPerMonth} visits/mo · {money(plan.pricePerVisit)}/cut</div>
+              <div className="text-xs text-prime-600">{booking.freq === "weekly" ? "Every week" : booking.freq === "biweekly" ? "Every 2 weeks" : "Once a month"} · {money(plan.pricePerVisit)}/cut</div>
             </div>
             <div className="text-right">
               <div className="text-2xl font-extrabold text-prime-700">{money(plan.estMonthly)}</div>
@@ -117,6 +118,7 @@ export default function BookingFlow() {
         </div>
       </div>
 
+      {/* Step */}
       <div className="card p-6">
         {step === "contact" && (
           <form onSubmit={startPayment} className="space-y-4">

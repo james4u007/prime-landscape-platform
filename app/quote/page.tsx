@@ -167,7 +167,7 @@ export default function QuotePage() {
                               <span className="font-bold text-prime-900">{label}</span>
                               {badge && <span className="rounded-full bg-prime-100 px-2 py-0.5 text-[10px] font-semibold uppercase text-prime-700">{badge}</span>}
                             </div>
-                            <div className="text-xs text-prime-600">{fp.visitsPerMonth} visits/mo · {money(fp.pricePerVisit)} per cut</div>
+                            <div className="text-xs text-prime-600">{key === "weekly" ? "Every week" : key === "biweekly" ? "Every 2 weeks" : "Once a month"} · {money(fp.pricePerVisit)} per cut</div>
                           </div>
                           <div className="text-right">
                             <div className="text-2xl font-extrabold text-prime-700">{money(fp.estMonthly)}</div>
